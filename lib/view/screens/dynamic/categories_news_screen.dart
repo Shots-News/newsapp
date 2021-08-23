@@ -22,6 +22,7 @@ class MyCategoriesNewsScreen extends StatefulWidget {
 
 class _MyCategoriesNewsScreenState extends State<MyCategoriesNewsScreen> {
   late NewsBloc _newsBloc = NewsBloc(articleRepository: ArticleService(), categoriesID: widget._id);
+
   @override
   void initState() {
     _newsBloc.add(NewsEvent.fetchNews);
@@ -36,6 +37,9 @@ class _MyCategoriesNewsScreenState extends State<MyCategoriesNewsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    /// [FirebaseCrashlytics]
+    // FirebaseCrashlytics.instance.crash();
+
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(

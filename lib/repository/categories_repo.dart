@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:dio_http_cache/dio_http_cache.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:newsapp/meta/config.dart';
 import 'package:newsapp/models/categories_model.dart';
@@ -49,6 +50,9 @@ class CategoryService with ChangeNotifier implements CategoriesRepository {
       _list = response.data.map<CategoriesModel>((json) => CategoriesModel.fromJson(json)).toList();
     } catch (e) {
       print(e);
+
+      /// [FirebaseCrashlytics]
+      FirebaseCrashlytics.instance.log("Get Categories List: ${e.toString()}");
     }
 
     notifyListeners();

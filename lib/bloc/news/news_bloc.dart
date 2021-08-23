@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:newsapp/models/article_model.dart';
 import 'package:newsapp/repository/article_repo.dart';
 
@@ -24,6 +25,9 @@ class NewsBloc extends Bloc<NewsEvent, NewsState> {
 
   @override
   Stream<NewsState> mapEventToState(NewsEvent event) async* {
+    /// [FirebaseCrashlytics]
+    // FirebaseCrashlytics.instance.crash();
+
     if (categoriesID != 0) {
       switch (event) {
         case NewsEvent.fetchNews:
@@ -39,6 +43,9 @@ class NewsBloc extends Bloc<NewsEvent, NewsState> {
             yield NewsError(error: 'No Formate Exception');
           } catch (e) {
             print(e.toString());
+
+            /// [FirebaseCrashlytics]
+            FirebaseCrashlytics.instance.log("NewsBloc: ${e.toString()}");
             yield NewsError(error: 'Un Known Error ${e.toString()}');
           }
           break;

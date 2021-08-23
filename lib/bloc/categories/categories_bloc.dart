@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:newsapp/models/categories_model.dart';
 import 'package:newsapp/repository/categories_repo.dart';
 
@@ -37,6 +38,9 @@ class CategoriesBloc extends Bloc<CategoriesEvent, CategoriesState> {
           yield CategoriesError(error: 'No Formate Exception');
         } catch (e) {
           print(e.toString());
+
+          /// [FirebaseCrashlytics]
+          FirebaseCrashlytics.instance.log("CategoriesBloc: ${e.toString()}");
           yield CategoriesError(error: 'Un Known Error ${e.toString()}');
         }
         break;

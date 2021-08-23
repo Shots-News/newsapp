@@ -28,6 +28,9 @@ class _MyCategoriesScreenState extends State<MyCategoriesScreen> {
 
   @override
   Widget build(BuildContext context) {
+    /// [FirebaseCrashlytics]
+    // FirebaseCrashlytics.instance.crash();
+
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(

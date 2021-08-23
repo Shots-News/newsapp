@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:dio_http_cache/dio_http_cache.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:newsapp/meta/config.dart';
 import 'package:newsapp/models/article_model.dart';
@@ -36,7 +37,6 @@ class ArticleService with ChangeNotifier {
 
   Future<List<ArticleModel>> getArticlesList() async {
     String _url = SUPABASE_URL + ARTICLES_TABLE;
-
     _dioCacheManager = DioCacheManager(
       CacheConfig(baseUrl: _url, databaseName: "Articles"),
     );
@@ -47,6 +47,9 @@ class ArticleService with ChangeNotifier {
       _list = response.data.map<ArticleModel>((json) => ArticleModel.fromJson(json)).toList();
     } catch (e) {
       print(e);
+
+      /// [FirebaseCrashlytics]
+      FirebaseCrashlytics.instance.log("Get Articles List: ${e.toString()}");
     }
     notifyListeners();
     return data;
@@ -67,6 +70,9 @@ class ArticleService with ChangeNotifier {
       _list = response.data.map<ArticleModel>((json) => ArticleModel.fromJson(json)).toList();
     } catch (e) {
       print(e);
+
+      /// [FirebaseCrashlytics]
+      FirebaseCrashlytics.instance.log("Get Articles List By Categories: ${e.toString()}");
     }
     notifyListeners();
     return data;

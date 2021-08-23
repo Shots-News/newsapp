@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:newsapp/models/user_model.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 
 class AuthService with ChangeNotifier {
   /// [Firebase Auth Instance]
@@ -63,18 +64,27 @@ class AuthService with ChangeNotifier {
       );
       UserCredential _credential = await _firebaseAuth.signInWithCredential(_authCredential);
       User _user = _credential.user!;
-
       return _userModel(_user);
     } on FirebaseAuthException catch (e) {
-      if (e.code == 'user-not-found') {
-        print('No user found for that email.');
-      } else {
-        print('try again later $e');
-      }
+      /// [FirebaseCrashlytics]
+      await FirebaseCrashlytics.instance
+          .recordError(e, e.stackTrace, reason: '1. FirebaseAuthException Google Sign in: ${e.message}', printDetails: true);
+      await FirebaseCrashlytics.instance.recordError(e, e.stackTrace,
+          reason: '2. FirebaseAuthException Google Sign in: ${e.message}', fatal: true, printDetails: true);
     } on PlatformException catch (err) {
       print('PlatformException $err ${err.code} ${err.message}');
+
+      /// [FirebaseCrashlytics]
+      await FirebaseCrashlytics.instance
+          .recordError(err, err.details, reason: '1. PlatformException Google Sign in: ${err.message}', printDetails: true);
+
+      await FirebaseCrashlytics.instance.recordError(err, err.details,
+          reason: '2. PlatformException Google Sign in: ${err.message}', fatal: true, printDetails: true);
     } catch (err) {
       print('error $err');
+
+      /// [FirebaseCrashlytics]
+      await FirebaseCrashlytics.instance.log("Google Sign in: ${err.toString()}");
     }
   }
 
@@ -127,6 +137,9 @@ class AuthService with ChangeNotifier {
       await _firebaseAuth.signOut();
     } catch (e) {
       print(e.toString());
+
+      /// [FirebaseCrashlytics]
+      FirebaseCrashlytics.instance.log("Sign Out: ${e.toString()}");
     }
   }
 

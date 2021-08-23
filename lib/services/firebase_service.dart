@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/services.dart';
 import 'package:newsapp/models/article_model.dart';
 import 'package:newsapp/models/bookmark_model.dart';
@@ -16,22 +17,34 @@ class FirebaseService {
   Future _createComment(CommentModel commentModel) async {
     try {
       await _ref.doc().set(commentModel.toJson());
-    } catch (e) {
-      if (e is PlatformException) {
-        return e.message;
-      }
-      return e.toString();
+    } on PlatformException catch (err) {
+      print('PlatformException Send Comment: $err ${err.code} ${err.message}');
+
+      /// [FirebaseCrashlytics]
+      await FirebaseCrashlytics.instance
+          .recordError(err, err.details, reason: '1. PlatformException Send Comment: ${err.message}', printDetails: true);
+      await FirebaseCrashlytics.instance.recordError(err, err.details,
+          reason: '2. PlatformException Send Comment: ${err.message}', fatal: true, printDetails: true);
+    } catch (err) {
+      await FirebaseCrashlytics.instance.log("Send Comment: ${err.toString()}");
+      return err.toString();
     }
   }
 
   Future _createBookmarked(BookmarkModel bookmarkModel) async {
     try {
       await _ref1.doc().update(bookmarkModel.toJson());
-    } catch (e) {
-      if (e is PlatformException) {
-        return e.message;
-      }
-      return e.toString();
+    } on PlatformException catch (err) {
+      print('PlatformException Send Bookmarked: $err ${err.code} ${err.message}');
+
+      /// [FirebaseCrashlytics]
+      await FirebaseCrashlytics.instance
+          .recordError(err, err.details, reason: '1. PlatformException Send Comment: ${err.message}', printDetails: true);
+      await FirebaseCrashlytics.instance.recordError(err, err.details,
+          reason: '2. PlatformException Send Comment: ${err.message}', fatal: true, printDetails: true);
+    } catch (err) {
+      await FirebaseCrashlytics.instance.log("Send Bookmarked: ${err.toString()}");
+      return err.toString();
     }
   }
 

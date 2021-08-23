@@ -43,6 +43,9 @@ class _MyCommentScreenState extends State<MyCommentScreen> {
   Widget build(BuildContext context) {
     final _user = Provider.of<User?>(context);
 
+    /// [FirebaseCrashlytics]
+    // FirebaseCrashlytics.instance.crash();
+
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
