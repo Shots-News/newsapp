@@ -8,7 +8,7 @@ import 'package:newsapp/constant/objects.dart';
 import 'package:newsapp/locator.dart';
 import 'package:newsapp/meta/icon.dart';
 import 'package:newsapp/models/article_model.dart';
-import 'package:newsapp/services/firebase_service.dart';
+import 'package:newsapp/firebase/firestore.dart';
 import 'package:newsapp/view/widgets/message.dart';
 import 'package:provider/provider.dart';
 

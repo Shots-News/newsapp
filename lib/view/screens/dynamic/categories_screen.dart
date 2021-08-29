@@ -5,6 +5,7 @@ import 'package:newsapp/bloc/categories/categories_bloc.dart';
 import 'package:newsapp/constant/objects.dart';
 import 'package:newsapp/models/categories_model.dart';
 import 'package:newsapp/routes/move.dart';
+import 'package:newsapp/routes/route_name.dart';
 import 'package:newsapp/view/screens/dynamic/categories_news_screen.dart';
 import 'package:provider/provider.dart';
 
@@ -81,6 +82,7 @@ class _MyCategoriesScreenState extends State<MyCategoriesScreen> {
             onTap: () => moveTo(
               context,
               screen: MyCategoriesNewsScreen(name: _list[index].name!, id: _list[index].id!),
+              name: ScreenName.CATEGORIES_NEWS_SCREEN,
             ),
             dense: true,
             title: Text(

@@ -6,7 +6,8 @@ import 'package:newsapp/constant/objects.dart';
 import 'package:newsapp/locator.dart';
 import 'package:newsapp/meta/icon.dart';
 import 'package:newsapp/routes/move.dart';
-import 'package:newsapp/services/auth.dart';
+import 'package:newsapp/firebase/auth.dart';
+import 'package:newsapp/routes/route_name.dart';
 import 'package:newsapp/view/screens/dynamic/categories_screen.dart';
 import 'package:newsapp/view/screens/dynamic/saved_screen.dart';
 import 'package:newsapp/view/screens/static/about_screen.dart';
@@ -58,29 +59,29 @@ class DrawerWidget extends StatelessWidget {
             DrawerItemWidget(
               label: "Categories",
               iconData: MyIcons.layers,
-              onTap: () => moveTo(context, screen: MyCategoriesScreen()),
+              onTap: () => moveTo(context, screen: MyCategoriesScreen(), name: ScreenName.CATEGORIES_SCREEN),
             ),
             DrawerItemWidget(
               label: "Saved",
               iconData: MyIcons.inbox,
-              onTap: () => moveTo(context, screen: MySavedScreen()),
+              onTap: () => moveTo(context, screen: MySavedScreen(), name: ScreenName.SAVED_SCREEN),
             ),
             DrawerItemWidget(
               label: "Settings",
               iconData: MyIcons.settings_1,
-              onTap: () => moveTo(context, screen: MySettingScreen()),
+              onTap: () => moveTo(context, screen: MySettingScreen(), name: ScreenName.SETTING_SCREEN),
             ),
             DrawerItemWidget(label: "Share", iconData: MyIcons.share),
             DrawerItemWidget(label: "Rate App", iconData: Icons.insights),
             DrawerItemWidget(
               label: "Privacy Policy",
               iconData: MyIcons.shield,
-              onTap: () => moveTo(context, screen: MyPrivacyPolicyScreen()),
+              onTap: () => moveTo(context, screen: MyPrivacyPolicyScreen(), name: ScreenName.PRIVACY_SCREEN),
             ),
             DrawerItemWidget(
               label: "About Us",
               iconData: MyIcons.rss,
-              onTap: () => moveTo(context, screen: MyAboutScreen()),
+              onTap: () => moveTo(context, screen: MyAboutScreen(), name: ScreenName.ABOUT_SCREEN),
             ),
           ],
         ),

@@ -2,12 +2,15 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:newsapp/firebase/analytics.dart';
+import 'package:newsapp/locator.dart';
 import 'package:newsapp/models/user_model.dart';
 
 class AuthService with ChangeNotifier {
   /// [Firebase Auth Instance]
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
+  final AnalyticsService _analyticsService = locator<AnalyticsService>();
 
   /// [Create Firebase User Object]
   UserInfoModel _userModel(User user) {
@@ -63,6 +66,9 @@ class AuthService with ChangeNotifier {
       );
       UserCredential _credential = await _firebaseAuth.signInWithCredential(_authCredential);
       User _user = _credential.user!;
+
+      await _analyticsService.setUserProperties(userId: _user.uid);
+      await _analyticsService.logSignin();
 
       return _userModel(_user);
     } on FirebaseAuthException catch (e) {
@@ -125,6 +131,7 @@ class AuthService with ChangeNotifier {
     try {
       await _googleSignIn.signOut();
       await _firebaseAuth.signOut();
+      await _analyticsService.logSignout();
     } catch (e) {
       print(e.toString());
     }

@@ -10,7 +10,8 @@ import 'package:newsapp/meta/config.dart';
 import 'package:newsapp/meta/icon.dart';
 import 'package:newsapp/models/article_model.dart';
 import 'package:newsapp/routes/move.dart';
-import 'package:newsapp/services/firebase_service.dart';
+import 'package:newsapp/firebase/firestore.dart';
+import 'package:newsapp/routes/route_name.dart';
 import 'package:newsapp/view/screens/dynamic/comment_screen.dart';
 import 'package:newsapp/view/widgets/shimmer.dart';
 import 'package:provider/provider.dart';
@@ -168,7 +169,7 @@ class _NewsViewWidgetState extends State<NewsViewWidget> {
                   ),
                   IconButton(
                     onPressed: () {
-                      moveTo(context, screen: MyCommentScreen(articleModel: widget._article));
+                      moveTo(context, screen: MyCommentScreen(articleModel: widget._article), name: ScreenName.COMMENT_SCREEN);
                     },
                     icon: Icon(MyIcons.chat),
                   ),

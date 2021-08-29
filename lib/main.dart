@@ -1,4 +1,6 @@
 import 'dart:io';
+
+import 'package:newsapp/firebase/analytics.dart';
 import 'package:newsapp/locator.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -11,7 +13,7 @@ import 'package:newsapp/bloc/categories/categories_bloc.dart';
 import 'package:newsapp/meta/theme.dart';
 import 'package:newsapp/repository/article_repo.dart';
 import 'package:newsapp/repository/categories_repo.dart';
-import 'package:newsapp/services/auth.dart';
+import 'package:newsapp/firebase/auth.dart';
 import 'package:newsapp/view/screens/dynamic/home_screen.dart';
 
 final InAppLocalhostServer localhostServer = new InAppLocalhostServer();
@@ -31,6 +33,7 @@ Future main() async {
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
+
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
@@ -47,6 +50,9 @@ class MyApp extends StatelessWidget {
           theme: themeData,
           themeMode: ThemeMode.dark,
           home: MyHomeScreen(),
+          navigatorObservers: [
+            locator<AnalyticsService>().getAnalyticsObserver(),
+          ],
         ),
       ),
     );
