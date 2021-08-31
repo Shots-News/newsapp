@@ -7,6 +7,9 @@ class MySavedScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    /// [FirebaseCrashlytics]
+    // FirebaseCrashlytics.instance.crash();
+
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(

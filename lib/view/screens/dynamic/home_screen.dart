@@ -29,6 +29,9 @@ class _MyHomeScreenState extends State<MyHomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    /// [FirebaseCrashlytics]
+    // FirebaseCrashlytics.instance.crash();
+
     return Scaffold(
       appBar: AppBar(
         title: Text(

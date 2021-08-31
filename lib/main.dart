@@ -1,54 +1,36 @@
+import 'dart:async';
 import 'dart:io';
+import 'dart:isolate';
 import 'package:newsapp/locator.dart';
-import 'package:provider/provider.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:newsapp/view/app.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
-import 'package:newsapp/bloc/articles/articles_bloc.dart';
-import 'package:newsapp/bloc/categories/categories_bloc.dart';
-import 'package:newsapp/meta/theme.dart';
-import 'package:newsapp/repository/article_repo.dart';
-import 'package:newsapp/repository/categories_repo.dart';
-import 'package:newsapp/services/auth.dart';
-import 'package:newsapp/view/screens/dynamic/home_screen.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 
 final InAppLocalhostServer localhostServer = new InAppLocalhostServer();
 
 Future main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
-
-  // start the localhost server
-  await localhostServer.start();
-  if (Platform.isAndroid) {
-    await AndroidInAppWebViewController.setWebContentsDebuggingEnabled(true);
-  }
-  setup();
-  runApp(MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
-  @override
-  Widget build(BuildContext context) {
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider<CategoriesBloc>(create: (_) => CategoriesBloc(categoriesRepository: CategoryService())),
-        BlocProvider<ArticlesBloc>(create: (_) => ArticlesBloc(articleRepository: ArticleService())),
-      ],
-      child: MultiProvider(
-        providers: [
-          StreamProvider<User?>.value(initialData: null, value: AuthService().user),
-        ],
-        child: MaterialApp(
-          debugShowCheckedModeBanner: false,
-          theme: themeData,
-          themeMode: ThemeMode.dark,
-          home: MyHomeScreen(),
-        ),
-      ),
+  Isolate.current.addErrorListener(RawReceivePort((pair) async {
+    final List<dynamic> errorAndStacktrace = pair;
+    await FirebaseCrashlytics.instance.recordError(
+      errorAndStacktrace.first,
+      errorAndStacktrace.last,
     );
-  }
+  }).sendPort);
+  runZonedGuarded<Future<void>>(() async {
+    WidgetsFlutterBinding.ensureInitialized();
+    await Firebase.initializeApp();
+
+    // start the localhost server
+    await localhostServer.start();
+    if (Platform.isAndroid) {
+      await AndroidInAppWebViewController.setWebContentsDebuggingEnabled(true);
+    }
+    setup();
+
+    // Pass all uncaught errors from the framework to Crashlytics.
+    FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
+    runApp(MyApp());
+  }, (error, stack) => FirebaseCrashlytics.instance.recordError(error, stack));
 }
